@@ -24,7 +24,7 @@ describe('',function(){
     })
     it('should return an array with aveScore and totalScore of student',function(){
         
-        var stuInfo = main.getStuInfo('李四,002,汉,2,Math:85,Chinese:80,English:70,program:90');
+        var stuInfo = main.getStuInfo('李四,2,汉,2,Math:85,Chinese:80,English:70,program:90');
         var stuInfoAndScore = main.countStuScore(stuInfo);
         expect(stuInfoAndScore).toEqual(
             {

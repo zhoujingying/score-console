@@ -1,14 +1,60 @@
 var readline = require('readline');
 
-var str = readline.createInterface({
+var r1 = readline.createInterface({
     input:process.stdin,
     output:process.stdout
 })
-str.question('请输入学生信息',function(answer){
-    console.log(answer+'meimei');
-    // str.close;
-})
 
+var firstLine = '1.添加学生\n2.生成成绩单\n3.退出\n请输入你的选择（1～3）\n';
+entry(firstLine);
+function entry(str){
+r1.question(str,function(answer){
+    if(answer == 1){
+        flag = 'chooseFirst';
+        main(flag,answer);
+    }
+    if(answer == 2){
+        flag = 'chooseSecend';
+        main(flag,answer);
+    }
+    if(answer == 3){
+        flag = 'chooseThird';
+        main(flag,answer);
+    }
+    if(answer == 'w'){
+        entry('1.添加学生\n2.生成成绩单\n3.退出\n请输入你的选择（1～3）\n');
+    }
+
+   
+})
+}
+
+var flag = 'chooseFirst';
+function main(flag,str){
+    if(flag === 'chooseFirst'){
+        r1.question('请输入学生信息(格式：姓名，学号，名族，班级，学科：成绩，...)',function(answer){
+            var stu = getStuInfo(answer);
+            var countScore = countStuScore(stu);
+            addStudent(stu);
+            findClass();
+            calculateClass(classArr);
+            entry(firstLine);
+        });
+    }
+    if(flag === 'chooseSecend'){
+
+        r1.question('请输入要打印的学生的学号（格式：学号，学号,...）',function(answer){
+            var stuNum = getStuNum(answer);
+            var classInfo = getStuClassInfo(stuNum);
+            console.log(toPrintString(classInfo));
+            entry(firstLine);
+        });
+
+    }
+    if(flag === 'chooseThird'){
+        r1.close();
+    }
+}
 
 var stuArr = [];
 var classArr = [];
@@ -42,10 +88,12 @@ function countStuScore(obj){
 
 function findClass(){
     var stuList = [];
+     console.log(stuArr);
     for(var stuVal of stuArr){
         var ifStu = false;
         for(var listVal of stuList){
-            if(stuVal.className === listVal.stuInfo.className) return false;
+            console.log(stuVal);
+            if(stuVal.className === listVal.className) return false;
             else return true;
         }
         if(!ifStu) stuList.push(stuVal);
