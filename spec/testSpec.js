@@ -112,4 +112,48 @@ describe('',function(){
             ]
         expect(main.calculateClass(main.classArr)).toEqual(expected)
     })
+    it('should return an array with student number',function(){
+        expect(main.getStuNum('1,2,3,4,5')).toEqual([1,2,3,4,5]);
+    })
+    it('should return an array that included the students class information',function(){
+        var stu = main.getStuNum('3');
+        var expected = 
+                [
+                    {
+                        stuInfo:
+                            {   name:'王五',
+                                stuNo:3,
+                                nation:'汉',
+                                className:1,
+                                subject:{
+                                    Math:75,
+                                    Chinese:95,
+                                    English:80,
+                                    program:80
+                                },
+                                stuScore:{
+                                    totalScore:330,
+                                    aveScore:82.5
+                                }
+                            }
+                            ,
+                        classAveScore:330,
+                        classMiddleScore:330,
+                        classNum:1
+                    }
+                ]
+        expect(main.getStuClassInfo(stu)).toEqual(expected);
+    })
+    it('should return a string witch has the student info and class info that inputed',function(){
+        var stu = main.getStuNum('3');
+        var inputArr = main.getStuClassInfo(stu);
+        expect(main.toPrintString(inputArr)).toEqual(
+            '\n'+'成绩单'+'\n'+'姓名|数学|语文|英语|编程|平均分|总分'+'\n'+
+            '============================'+'\n'+
+            '王五|75|95|80|80|82.5|330'+
+            '\n'+'============================'+'\n'+
+            '全班平均分为：330'+'\n'+
+            '全班中位分为：330'
+        );
+    })
 })

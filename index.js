@@ -5,14 +5,20 @@ var str = readline.createInterface({
     output:process.stdout
 })
 str.question('请输入学生信息',function(answer){
-    console.log('meimei');
+    console.log(answer+'meimei');
     // str.close;
 })
+
+
 var stuArr = [];
 var classArr = [];
+function addStudent(stu){
+    stuArr.push(stu);
+    return stuArr;
+}
+
 function getStuInfo(str){
-    var inputInfo =  str.split(',');
-    
+    var inputInfo =  str.split(','); 
     var stu  =  {
             name:inputInfo[0],
             stuNo:Number(inputInfo[1]),
@@ -32,11 +38,6 @@ function countStuScore(obj){
     obj.stuScore.totalScore = (obj.subject.Math+obj.subject.Chinese+obj.subject.English+obj.subject.program);
     obj.stuScore.aveScore = obj.stuScore.totalScore/4;
     return obj;
-}
-
-function addStudent(stu){
-    stuArr.push(stu);
-    return stuArr;
 }
 
 function findClass(){
@@ -75,6 +76,50 @@ function calculateClass(classArr){
     })
     return result;
 }
+function getStuNum(numStr){
+    var numArr = [];
+    numStr.split(',').forEach(function(val){
+        numArr.push(Number(val));
+    })
+    return numArr;
+}
+function getStuClassInfo(stuNumArr){
+    var stuInfo = [];
+    var stuList = [];
+    stuNumArr.forEach(function(nVal){
+        classArr.forEach(function(val){
+            stuList = val.stuInfo;
+            stuList.forEach(function(sVal){
+                if(nVal === sVal.stuNo){
+                    // stuInfo.push(sVal.stuInfo);
+                    stuInfo.push({
+                        stuInfo:sVal,
+                        classAveScore:val.classAveScore,
+                        classMiddleScore:val.classMiddleScore,
+                        classNum:val.classNum
+
+                    })
+                }
+            })
+            
+        })
+    })
+    return stuInfo;
+}
+function toPrintString(inputStuArr){
+    var str = '';
+    inputStuArr.forEach(function(val){
+       str = '\n'+'成绩单'+'\n'+'姓名|数学|语文|英语|编程|平均分|总分'+'\n'+
+            '============================'+'\n'+
+            val.stuInfo.name+'|'+val.stuInfo.subject.Math+'|'+val.stuInfo.subject.Chinese+'|'+
+            val.stuInfo.subject.English+'|'+val.stuInfo.subject.program+'|'+val.stuInfo.stuScore.aveScore+'|'+val.stuInfo.stuScore.totalScore+
+            '\n'+'============================'+'\n'+
+            '全班平均分为：'+val.classAveScore+'\n'+
+            '全班中位分为：'+val.classMiddleScore;
+        
+    })
+    return str;
+}
 module.exports = {
     stuArr:stuArr,
     classArr:classArr,
@@ -82,5 +127,8 @@ module.exports = {
     countStuScore:countStuScore,
     addStudent:addStudent,
     findClass:findClass,
-    calculateClass:calculateClass
+    calculateClass:calculateClass,
+    getStuNum:getStuNum,
+    getStuClassInfo:getStuClassInfo,
+    toPrintString:toPrintString
 }
