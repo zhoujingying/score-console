@@ -9,6 +9,7 @@ str.question('请输入学生信息',function(answer){
     // str.close;
 })
 var stuArr = [];
+var classArr = [];
 function getStuInfo(str){
     var inputInfo =  str.split(',');
     
@@ -38,36 +39,48 @@ function addStudent(stu){
     return stuArr;
 }
 
-function findClass(stuArr){
-    
+function findClass(){
     var stuList = [];
-
     for(var stuVal of stuArr){
         var ifStu = false;
         for(var listVal of stuList){
-            if(stuVal.className === listVal.stuInfo.className){
-                return false;
-            }else{
-                return true;
-            }
+            if(stuVal.className === listVal.stuInfo.className) return false;
+            else return true;
         }
-        if(!ifStu){
-            stuList.push(stuVal);
-        }
+        if(!ifStu) stuList.push(stuVal);
     }
-    var classGrop = {
+    classArr.push({
         stuInfo:stuList,
         classAveScore:0,
-        classTotalScore:0,
         classNum:stuList[0].className
-    }
-    return classGrop;
-    
-    
+    });
+    return classArr;
+}
+function calculateClass(classArr){
+    var result = [];
+    var totalScores = [];
+    var total = 0;
+    classArr = classArr;
+
+    classArr.forEach(function(val){
+        val.stuInfo.forEach(function(sVal){
+            total += sVal.stuScore.totalScore;
+            totalScores.push(sVal.stuScore.totalScore);
+            // totalScores.push(sVal.stuScore.totalScore).sort(function(a,b){return a-b});
+            totalScores.sort(function(a,b){return a-b});
+            val.classAveScore = total/totalScores.length;
+            val.classMiddleScore = totalScores[Math.floor(totalScores.length/2)];
+        })
+        result.push(val);
+    })
+    return result;
 }
 module.exports = {
+    stuArr:stuArr,
+    classArr:classArr,
     getStuInfo:getStuInfo,
     countStuScore:countStuScore,
     addStudent:addStudent,
-    findClass:findClass
+    findClass:findClass,
+    calculateClass:calculateClass
 }
