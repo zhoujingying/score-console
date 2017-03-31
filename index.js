@@ -14,7 +14,7 @@ r1.question(str,function(answer){
         main(flag,answer);
     }
     if(answer == 2){
-        flag = 'chooseSecend';
+        flag = 'chooseSecond';
         main(flag,answer);
     }
     if(answer == 3){
@@ -24,8 +24,6 @@ r1.question(str,function(answer){
     if(answer == 'w'){
         entry('1.添加学生\n2.生成成绩单\n3.退出\n请输入你的选择（1～3）\n');
     }
-
-   
 })
 }
 
@@ -35,13 +33,13 @@ function main(flag,str){
         r1.question('请输入学生信息(格式：姓名，学号，名族，班级，学科：成绩，...)',function(answer){
             var stu = getStuInfo(answer);
             var countScore = countStuScore(stu);
-            addStudent(stu);
+            addStudent(countScore);
             findClass();
             calculateClass(classArr);
             entry(firstLine);
         });
     }
-    if(flag === 'chooseSecend'){
+    if(flag === 'chooseSecond'){
 
         r1.question('请输入要打印的学生的学号（格式：学号，学号,...）',function(answer){
             var stuNum = getStuNum(answer);
@@ -58,16 +56,18 @@ function main(flag,str){
 
 var stuArr = [];
 var classArr = [];
+
+
 function addStudent(stu){
     stuArr.push(stu);
     return stuArr;
 }
 
 function getStuInfo(str){
-    var inputInfo =  str.split(','); 
+    var inputInfo =  str.split(',');
     var stu  =  {
             name:inputInfo[0],
-            stuNo:Number(inputInfo[1]),
+            stuNo:inputInfo[1],
             nation:inputInfo[2],
             className:Number(inputInfo[3]),
             subject:{
@@ -87,17 +87,18 @@ function countStuScore(obj){
 }
 
 function findClass(){
+     // console.log(stuArr);
     var stuList = [];
-     console.log(stuArr);
     for(var stuVal of stuArr){
         var ifStu = false;
         for(var listVal of stuList){
             console.log(stuVal);
-            if(stuVal.className === listVal.className) return false;
-            else return true;
+            if(stuVal.className === listVal.className) ifStu = false;
+            else ifStu = true;
         }
         if(!ifStu) stuList.push(stuVal);
     }
+    console.log(stuList);
     classArr.push({
         stuInfo:stuList,
         classAveScore:0,
@@ -105,17 +106,15 @@ function findClass(){
     });
     return classArr;
 }
-function calculateClass(classArr){
+function calculateClass(){
     var result = [];
     var totalScores = [];
     var total = 0;
-    classArr = classArr;
 
     classArr.forEach(function(val){
         val.stuInfo.forEach(function(sVal){
             total += sVal.stuScore.totalScore;
             totalScores.push(sVal.stuScore.totalScore);
-            // totalScores.push(sVal.stuScore.totalScore).sort(function(a,b){return a-b});
             totalScores.sort(function(a,b){return a-b});
             val.classAveScore = total/totalScores.length;
             val.classMiddleScore = totalScores[Math.floor(totalScores.length/2)];
@@ -125,11 +124,7 @@ function calculateClass(classArr){
     return result;
 }
 function getStuNum(numStr){
-    var numArr = [];
-    numStr.split(',').forEach(function(val){
-        numArr.push(Number(val));
-    })
-    return numArr;
+    return numStr.split(',');
 }
 function getStuClassInfo(stuNumArr){
     var stuInfo = [];
@@ -139,7 +134,6 @@ function getStuClassInfo(stuNumArr){
             stuList = val.stuInfo;
             stuList.forEach(function(sVal){
                 if(nVal === sVal.stuNo){
-                    // stuInfo.push(sVal.stuInfo);
                     stuInfo.push({
                         stuInfo:sVal,
                         classAveScore:val.classAveScore,
@@ -164,7 +158,7 @@ function toPrintString(inputStuArr){
             '\n'+'============================'+'\n'+
             '全班平均分为：'+val.classAveScore+'\n'+
             '全班中位分为：'+val.classMiddleScore;
-        
+        // console.log(str);
     })
     return str;
 }
